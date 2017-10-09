@@ -10,6 +10,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       patients: [],
+      allPatients: [],
     };
   }
 
@@ -18,6 +19,7 @@ class App extends React.Component {
       .get('/patient')
       .then(response => {
         this.setState({
+          allPatients: response.data,
           patients: response.data,
         });
       })
@@ -27,7 +29,16 @@ class App extends React.Component {
   }
 
   renderPatientInfo(patientID) {
-    console.log('patientID: ', patientID)
+    console.log('patientID: ', patientID);
+  }
+
+  handleSearchPatient(e) {
+    const filteredPatients = this.state.allPatients.filter(patient => {
+      return patient.name.toLowerCase().includes(e.target.value.toLowerCase());
+    });
+    this.setState({
+      patients: filteredPatients,
+    });
   }
 
   render() {
@@ -41,7 +52,7 @@ class App extends React.Component {
         </Grid.Row>
         <Grid.Row>
           <Grid.Column width={14}>
-            <Form.Input fluid onChange={() => console.log('inputing text')} />
+            <Form.Input fluid onChange={this.handleSearchPatient.bind(this)} />
           </Grid.Column>
           <Grid.Column width={2}>
             <Button onClick={() => console.log('button pressed')}>
@@ -55,12 +66,14 @@ class App extends React.Component {
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
-          <Card.Group>
-            <PatientList
-              patients={this.state.patients}
-              renderPatientInfo={this.renderPatientInfo}
-            />
-          </Card.Group>
+          <Grid.Column width={16}>
+            <Card.Group>
+              <PatientList
+                patients={this.state.patients}
+                renderPatientInfo={this.renderPatientInfo}
+              />
+            </Card.Group>
+          </Grid.Column>
         </Grid.Row>
       </Grid>
     )
