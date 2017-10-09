@@ -4,8 +4,40 @@
   "description": "A communication tool for doctors and patients",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webpack-dev": "webpack -d --watch",
+    "build": "webpack -p",
+    "server-dev": "nodemon ./server/index.js",
+    "server-start": "node ./server/index.js",
+    "lint": "eslint src/client/app server database/index.js",
+    "db-start": "mongod --dbpath ./database/mongoose/data/db"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/awchang56/tempus.git"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.16.2",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "body-parser": "^1.18.2",
+    "eslint": "^4.8.0",
+    "eslint-config-planet": "^15.2.0",
+    "express": "^4.16.1",
+    "moment": "^2.18.1",
+    "mongoose": "^4.12.1",
+    "multer": "^1.3.0",
+    "nodemon": "^1.12.1",
+    "pg": "^7.3.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "redis": "^2.8.0",
+    "semantic-ui-react": "^0.74.2",
+    "validate.js": "^0.11.1",
+    "webpack": "^3.6.0"
+  }
 }
