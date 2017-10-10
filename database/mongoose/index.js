@@ -35,6 +35,7 @@ const apptSchema = new mongoose.Schema({
   isConfirmedByDoctor: Boolean,
   isConfirmedByPatient: Boolean,
   isCancelled: Boolean,
+  message: String,
 });
 
 const Appt = db.model('Appt', apptSchema);

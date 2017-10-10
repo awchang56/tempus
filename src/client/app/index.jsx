@@ -6,6 +6,7 @@ import axios from 'axios';
 
 import PatientList from './components/PatientList.jsx';
 import PatientInfoModal from './components/PatientInfoModal.jsx';
+import CancelMessageModal from './components/CancelMessageModal.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -15,6 +16,7 @@ class App extends React.Component {
       allPatients: [],
       modalOpen: false,
       addAppointmentFormOpen: false,
+      messageBoxOpen: false,
     };
   }
 
@@ -60,6 +62,7 @@ class App extends React.Component {
     this.setState({
       modalOpen: false,
       addAppointmentFormOpen: false,
+      messageBoxOpen: false,
     });
   }
 
@@ -110,12 +113,49 @@ class App extends React.Component {
           selectedTime: null,
           apptPurpose: '',
           addAppointmentFormOpen: false,
-
         });
       })
       .catch(err => {
         console.log('error saving new appointment: ', err);
       });
+  }
+
+  handleDeleteAppt() {
+    const cancelledAppt = {
+      ...this.state.cancelledAppt,
+      message: this.state.cancelMessage,
+    };
+
+    axios
+      .put('/appointment', cancelledAppt)
+      .then(response => {
+        this.setState({
+          appointments: response.data,
+          messageBoxOpen: false,
+        });
+      })
+      .catch(err => {
+        console.log('error cancelling appointment', err);
+      });
+  }
+
+  handleCancelMessage(e) {
+    this.setState({
+      cancelMessage: e.target.value,
+    });
+  }
+
+  handleMessageBoxOpen(appt) {
+    this.setState({
+      messageBoxOpen: true,
+      cancelledAppt: appt,
+    });
+  }
+
+  handleMessageBoxClose() {
+    this.setState({
+      messageBoxOpen: false,
+    });
   }
 
   render() {
@@ -167,6 +207,15 @@ class App extends React.Component {
             handleTimeChange={this.handleTimeChange.bind(this)}
             handleApptPurpose={this.handleApptPurpose.bind(this)}
             handleAddAppointment={this.handleAddAppointment.bind(this)}
+            handleMessageBoxOpen={this.handleMessageBoxOpen.bind(this)}
+          />
+        </Grid.Row>
+        <Grid.Row>
+          <CancelMessageModal
+            handleDeleteAppt={this.handleDeleteAppt.bind(this)}
+            messageBoxOpen={this.state.messageBoxOpen}
+            handleMessageBoxClose={this.handleMessageBoxClose.bind(this)}
+            handleCancelMessage={this.handleCancelMessage.bind(this)}
           />
         </Grid.Row>
       </Grid>

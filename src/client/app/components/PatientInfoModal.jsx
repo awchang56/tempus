@@ -63,7 +63,14 @@ const PatientInfoModal = (props) => (
                   />
                   : <AddAppointment renderAddAppointmentForm={props.renderAddAppointmentForm} />
               }
-              <AppointmentsList appointments={props.appointments || []} />
+              <AppointmentsList
+                appointments={props.appointments || []}
+                handleDeleteAppt={props.handleDeleteAppt}
+                messageBoxOpen={props.messageBoxOpen}
+                handleMessageBoxClose={props.handleMessageBoxClose}
+                handleMessageBoxOpen={props.handleMessageBoxOpen}
+                handleCancelMessage={props.handleCancelMessage}
+              />
             </Card.Group>
           </Grid.Column>
         </Grid.Row>

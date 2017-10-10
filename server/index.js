@@ -68,3 +68,33 @@ app.post('/appointment', (req, res) => {
       res.status(400).send();
     });
 });
+
+app.put('/appointment', (req, res) => {
+  models.Appt
+    .findById(req.body._id, (err, appt) => {
+      console.log('appointment found');
+
+      appt.set({isCancelled: true, message: req.body.message});
+      appt
+        .save((err, updatedAppt) => {
+          console.log('appointment has been cancelled');
+          models.Appt
+            .find({patientID: updatedAppt.patientID})
+            .then(response => {
+              res.status(200).send(response);
+            })
+            .catch(err => {
+              console.log('error retrieving complete list of appointments', err);
+              res.status(400).send();
+            });
+        })
+        .catch(err => {
+          console.log('error updating cancelled appointment: ', err);
+          res.status(400).send();
+        });
+    })
+    .catch(err => {
+      console.log('error finding appointment to cancel: ', err);
+      res.status(400).send();
+    });
+});

@@ -1,10 +1,12 @@
 import React from 'react';
-import {Card, Grid, Icon, Button} from 'semantic-ui-react';
+import {Card, Grid, Icon, Button, Form, Input, Modal, TextArea} from 'semantic-ui-react';
 import moment from 'moment';
 
-const validateAppt = appt => {
-  console.log('appt: ', appt);
-  if (appt.isCancelled) {
+const renderApptColor = appt => {
+  if (
+    appt.isCancelled &&
+      (moment(appt.date).diff(moment()) > 0)
+  ) {
     return {borderBottom: 'medium solid red'};
   } else if (
     appt.isConfirmedByDoctor &&
@@ -22,6 +24,16 @@ const validateAppt = appt => {
   }
 };
 
+const validateApptConfirmation = appt => {
+  if (appt.isConfirmedByPatient && appt.isConfirmedByDoctor) {
+    return 'star';
+  } else if (!appt.isConfirmedByDoctor && !appt.isConfirmedByPatient) {
+    return 'empty star';
+  } else {
+    return 'star half empty';
+  }
+};
+
 const AppointmentsList = (props) => (
   props.appointments
     .sort((a, b) => moment(b.date) - moment(a.date))
@@ -30,7 +42,7 @@ const AppointmentsList = (props) => (
         <Card
           fluid
           key={i}
-          style={validateAppt(appt)}
+          style={renderApptColor(appt)}
         >
           <Card.Content>
             <Card.Header>
@@ -45,12 +57,24 @@ const AppointmentsList = (props) => (
                       <span style={{fontWeight: 'bold', color: 'teal'}}>Purpose: </span>
                       <span style={{color: 'black'}}>{appt.purpose}</span>
                     </p>
+                    {
+                      appt.message ? (
+                        <p>
+                          <span style={{fontWeight: 'bold', color: 'teal'}}>Message to Patient: </span>
+                          <span style={{color: 'black'}}>{appt.message}</span>
+                        </p>
+                        ) : null
+                    }
                   </Card.Description>
                 </Grid.Column>
                 <Grid.Column width={3} verticalAlign="middle" textAlign="right">
                   <span>
-                    <Button icon="delete calendar" />
+                    <Button
+                      icon="delete calendar"
+                      onClick={() => props.handleMessageBoxOpen(appt)}
+                    />
                     <Button icon="file" />
+                    <Button icon={validateApptConfirmation(appt)} />
                   </span>
                 </Grid.Column>
               </Grid.Row>

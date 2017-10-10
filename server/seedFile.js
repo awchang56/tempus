@@ -47,12 +47,13 @@ const seed = {
   appts: [
     {
       patientID: 'patient1',
-      date: moment('2017-09-04 13:00'),
+      date: moment('2017-10-22 13:00'),
       purpose: 'flu shot',
       doctorID: 'doctor1',
       isConfirmedByDoctor: true,
       isConfirmedByPatient: true,
       isCancelled: false,
+      message: '',
     },
     {
       patientID: 'patient1',
@@ -62,6 +63,7 @@ const seed = {
       isConfirmedByDoctor: false,
       isConfirmedByPatient: false,
       isCancelled: false,
+      message: '',
     },
     {
       patientID: 'patient1',
@@ -71,6 +73,7 @@ const seed = {
       isConfirmedByDoctor: false,
       isConfirmedByPatient: true,
       isCancelled: true,
+      message: 'May we reschedule to 10/24?',
     },
     {
       patientID: 'patient2',
@@ -80,6 +83,7 @@ const seed = {
       isConfirmedByDoctor: true,
       isConfirmedByPatient: true,
       isCancelled: false,
+      message: '',
     },
     {
       patientID: 'patient2',
@@ -89,6 +93,7 @@ const seed = {
       isConfirmedByDoctor: true,
       isConfirmedByPatient: false,
       isCancelled: false,
+      message: '',
     },
   ],
   doctors: [
