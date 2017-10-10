@@ -15,8 +15,11 @@ const renderApptColor = appt => {
   ) {
     return {borderBottom: 'medium solid green'};
   } else if (
-    (appt.isConfirmedByDoctor || appt.isConfirmedByPatient) &&
-      (moment(appt.date).diff(moment()) > 0)
+    ((appt.isConfirmedByDoctor || appt.isConfirmedByPatient) &&
+      (moment(appt.date).diff(moment()) > 0)) || (
+        (!appt.isConfirmedByDoctor && !appt.isConfirmedByPatient) &&
+        (moment(appt.date).diff(moment()) > 0)
+      )
   ) {
     return {borderBottom: 'medium solid orange'};
   } else {
@@ -71,7 +74,13 @@ const AppointmentsList = (props) => (
                   <span>
                     <Button
                       icon="delete calendar"
-                      onClick={() => props.handleMessageBoxOpen(appt)}
+                      onClick={() => {
+                        if (props.userType === 'patient' || appt.isCancelled) {
+                          props.handleDeleteAppt(appt);
+                        } else {
+                          props.handleMessageBoxOpen(appt);
+                        }
+                      }}
                     />
                     <Button icon="file" />
                     <Button icon={validateApptConfirmation(appt)} onClick={() => props.handleConfirmAppt(appt)} />

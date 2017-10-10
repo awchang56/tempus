@@ -1,7 +1,7 @@
 import React from 'react';
 import {Modal, Card, Input, Button} from 'semantic-ui-react';
 
-const cancelMessageModal = (props) => (
+const CancelMessageModal = (props) => (
   <Modal
     open={props.messageBoxOpen}
     onClose={props.handleMessageBoxClose}
@@ -31,4 +31,4 @@ const cancelMessageModal = (props) => (
   </Modal>
 );
 
-export default cancelMessageModal;
+export default CancelMessageModal;

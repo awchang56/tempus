@@ -121,10 +121,15 @@ class Doctor extends React.Component {
   }
 
   handleDeleteAppt() {
-    const cancelledAppt = {
-      ...this.state.cancelledAppt,
-      message: this.state.cancelMessage,
-    };
+    let cancelledAppt;
+    if (arguments.length === 1) {
+      cancelledAppt = arguments[0];
+    } else {
+      cancelledAppt = {
+        ...this.state.cancelledAppt,
+        message: this.state.cancelMessage,
+      };
+    }
 
     axios
       .put('/appointment/cancel', cancelledAppt)
@@ -159,8 +164,9 @@ class Doctor extends React.Component {
   }
 
   handleConfirmAppt(appt) {
+    appt.userType = 'doctor';
     axios
-      .put('/appointment/doctor/confirm', appt)
+      .put('/appointment/confirm', appt)
       .then(response => {
         this.setState({
           appointments: response.data,
@@ -211,12 +217,13 @@ class Doctor extends React.Component {
             handleAddAppointment={this.handleAddAppointment.bind(this)}
             handleMessageBoxOpen={this.handleMessageBoxOpen.bind(this)}
             handleConfirmAppt={this.handleConfirmAppt.bind(this)}
+            handleDeleteAppt={this.handleDeleteAppt.bind(this)}
           />
         </Grid.Row>
         <Grid.Row>
           <CancelMessageModal
-            handleDeleteAppt={this.handleDeleteAppt.bind(this)}
             messageBoxOpen={this.state.messageBoxOpen}
+            handleDeleteAppt={this.handleDeleteAppt.bind(this)}
             handleMessageBoxClose={this.handleMessageBoxClose.bind(this)}
             handleCancelMessage={this.handleCancelMessage.bind(this)}
           />

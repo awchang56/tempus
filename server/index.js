@@ -111,9 +111,10 @@ app.post('/appointment', (req, res) => {
 });
 
 app.put('/appointment/cancel', (req, res) => {
+  console.log('req.body: ', req.body);
   models.Appt
     .findById(req.body._id, (err, appt) => {
-      appt.set({isCancelled: true, message: req.body.message});
+      appt.set({isCancelled: !appt.isCancelled, message: req.body.message});
       appt
         .save((err, updatedAppt) => {
           models.Appt
@@ -137,10 +138,14 @@ app.put('/appointment/cancel', (req, res) => {
     });
 });
 
-app.put('/appointment/doctor/confirm', (req, res) => {
+app.put('/appointment/confirm', (req, res) => {
   models.Appt
     .findById(req.body._id, (err, appt) => {
-      appt.set({isConfirmedByDoctor: !appt.isConfirmedByDoctor});
+      if (req.body.userType === 'patient') {
+        appt.set({isConfirmedByPatient: !appt.isConfirmedByPatient});
+      } else if (req.body.userType === 'doctor') {
+        appt.set({isConfirmedByDoctor: !appt.isConfirmedByDoctor});
+      }
       appt
         .save((err, updatedAppt) => {
           models.Appt
