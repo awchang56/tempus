@@ -1,6 +1,7 @@
 import React from 'react';
 import {render} from 'react-dom';
 import {Grid, Header, Form, Button, Icon, Card} from 'semantic-ui-react';
+import moment from 'moment';
 import axios from 'axios';
 
 import PatientList from './components/PatientList.jsx';
@@ -67,6 +68,52 @@ class App extends React.Component {
     });
   }
 
+  handleDateChange(date) {
+    this.setState({
+      selectedDate: date,
+    });
+  }
+
+  handleTimeChange(time) {
+    this.setState({
+      selectedTime: time,
+    });
+  }
+
+  handleApptPurpose(e) {
+    this.setState({
+      apptPurpose: e.target.value,
+    });
+  }
+
+  handleAddAppointment(patient) {
+    let appt = {
+      patientID: patient.patientID,
+      date: moment(
+        this.state.selectedDate.format('YYYY-MM-DD') +
+          ' ' +
+          this.state.selectedTime.format('HH-mm'),
+        'YYYY-MM-DD HH-mm'
+      ),
+      purpose: this.state.apptPurpose,
+      doctorID: 'doctor1',
+      isComplete: false,
+    };
+    axios
+      .post('/appointment', appt)
+      .then(response => {
+        this.setState({
+          appointments: response.data,
+          selectedDate: '',
+          selectedTime: null,
+          apptPurpose: '',
+        });
+      })
+      .catch(err => {
+        console.log('error saving new appointment: ', err);
+      });
+  }
+
   render() {
     return (
       <Grid centered padded verticalAlign="middle" columns={3}>
@@ -109,6 +156,13 @@ class App extends React.Component {
             appointments={this.state.appointments}
             renderAddAppointmentForm={this.renderAddAppointmentForm.bind(this)}
             addAppointmentFormOpen={this.state.addAppointmentFormOpen}
+            selectedDate={this.state.selectedDate}
+            selectedTime={this.state.selectedTime}
+            apptPurpose={this.state.apptPurpose}
+            handleDateChange={this.handleDateChange.bind(this)}
+            handleTimeChange={this.handleTimeChange.bind(this)}
+            handleApptPurpose={this.handleApptPurpose.bind(this)}
+            handleAddAppointment={this.handleAddAppointment.bind(this)}
           />
         </Grid.Row>
       </Grid>

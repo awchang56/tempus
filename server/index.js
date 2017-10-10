@@ -33,6 +33,7 @@ app.get('/patient', (req, res) => {
     })
     .catch(err => {
       console.log('error retrieving all patients from database', err);
+      res.status(400).send();
     });
 });
 
@@ -44,5 +45,26 @@ app.get('/appointment/:patientID', (req, res) => {
     })
     .catch(err => {
       console.log('error retrieving all appointments from database', err);
+      res.status(400).send();
+    });
+});
+
+app.post('/appointment', (req, res) => {
+  new models.Appt(req.body)
+    .save((err, doc) => {
+      console.log('appointment saved');
+      models.Appt
+        .find({patientID: doc.patientID})
+        .then(response => {
+          res.status(201).send(response);
+        })
+        .catch(err => {
+          console.log('error retrieving complete list of appointments: ', err);
+          res.status(400).send();
+        });
+    })
+    .catch(err => {
+      console.log('error adding appt to database: ', err);
+      res.status(400).send();
     });
 });
