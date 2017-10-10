@@ -4,6 +4,7 @@ import {Grid, Header, Form, Button, Icon, Card} from 'semantic-ui-react';
 import axios from 'axios';
 
 import PatientList from './components/PatientList.jsx';
+import PatientInfoModal from './components/PatientInfoModal.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -11,6 +12,8 @@ class App extends React.Component {
     this.state = {
       patients: [],
       allPatients: [],
+      modalOpen: false,
+      addAppointmentFormOpen: false,
     };
   }
 
@@ -28,8 +31,19 @@ class App extends React.Component {
       });
   }
 
-  renderPatientInfo(patientID) {
-    console.log('patientID: ', patientID);
+  renderPatientInfo(patient) {
+    axios
+      .get('/appointment/' + patient.patientID)
+      .then(response => {
+        this.setState({
+          selectedPatient: patient,
+          modalOpen: !this.state.modalOpen,
+          appointments: response.data,
+        });
+      })
+      .catch(err => {
+        console.log('error retrieving appts: ', err);
+      });
   }
 
   handleSearchPatient(e) {
@@ -38,6 +52,18 @@ class App extends React.Component {
     });
     this.setState({
       patients: filteredPatients,
+    });
+  }
+
+  handleCloseModal() {
+    this.setState({
+      modalOpen: false,
+    });
+  }
+
+  renderAddAppointmentForm() {
+    this.setState({
+      addAppointmentFormOpen: !this.state.addAppointmentFormOpen,
     });
   }
 
@@ -70,10 +96,20 @@ class App extends React.Component {
             <Card.Group>
               <PatientList
                 patients={this.state.patients}
-                renderPatientInfo={this.renderPatientInfo}
+                renderPatientInfo={this.renderPatientInfo.bind(this)}
               />
             </Card.Group>
           </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <PatientInfoModal
+            modalOpen={this.state.modalOpen}
+            patient={this.state.selectedPatient || {}}
+            handleCloseModal={this.handleCloseModal.bind(this)}
+            appointments={this.state.appointments}
+            renderAddAppointmentForm={this.renderAddAppointmentForm.bind(this)}
+            addAppointmentFormOpen={this.state.addAppointmentFormOpen}
+          />
         </Grid.Row>
       </Grid>
     )

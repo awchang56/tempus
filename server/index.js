@@ -26,7 +26,23 @@ app.get('/seed', (req, res) => {
 });
 
 app.get('/patient', (req, res) => {
-  models.Patient.find().then(response => {
-    res.status(200).send(response);
-  });
+  models.Patient
+    .find()
+    .then(response => {
+      res.status(200).send(response);
+    })
+    .catch(err => {
+      console.log('error retrieving all patients from database', err);
+    });
+});
+
+app.get('/appointment/:patientID', (req, res) => {
+  models.Appt
+    .find({patientID: req.params.patientID})
+    .then(response => {
+      res.status(200).send(response);
+    })
+    .catch(err => {
+      console.log('error retrieving all appointments from database', err);
+    });
 });

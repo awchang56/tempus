@@ -7,7 +7,7 @@ const PatientListEntry = (props) => (
     width={15}
     color="teal"
     style={{margin: '10 30 10 30'}}
-    onClick={() => props.renderPatientInfo(props.patient.patientID)}
+    onClick={() => props.renderPatientInfo(props.patient)}
   >
     <Card.Content>
       <Grid padded verticalAlign="middle" columns={2}>
