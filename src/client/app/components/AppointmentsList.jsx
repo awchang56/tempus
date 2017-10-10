@@ -74,7 +74,7 @@ const AppointmentsList = (props) => (
                       onClick={() => props.handleMessageBoxOpen(appt)}
                     />
                     <Button icon="file" />
-                    <Button icon={validateApptConfirmation(appt)} />
+                    <Button icon={validateApptConfirmation(appt)} onClick={() => props.handleConfirmAppt(appt)} />
                   </span>
                 </Grid.Column>
               </Grid.Row>

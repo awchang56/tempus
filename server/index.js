@@ -1,9 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const models = require('../database/mongoose');
-// const redis = require('../database/redis');
-// const pg = require('../database/postgres');
+const redis = require('../database/redis');
 const seedDatabase = require('./seedFile');
+const hasher = require('password-hash-and-salt');
 
 const app = express();
 
@@ -17,7 +17,22 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname + '/../src/client/'));
 
 app.post('/login', (req, res) => {
-  console.log('req.body: ', req.body);
+  redis.hgetall(req.body.username, (err, obj) => {
+    if (obj === null) {
+      res.status(200).send('invalid');
+    } else {
+      hasher(req.body.password).verifyAgainst(obj.password, (err, verified) => {
+        if (err) {
+          console.log('error verifying hash: ', err);
+          res.status(400).send();
+        } else if (!verified) {
+          res.status(200).send('invalid');
+        } else {
+          res.status(200).send(obj.userType);
+        }
+      });
+    }
+  });
 });
 
 app.get('/seed', (req, res) => {
@@ -69,15 +84,12 @@ app.post('/appointment', (req, res) => {
     });
 });
 
-app.put('/appointment', (req, res) => {
+app.put('/appointment/cancel', (req, res) => {
   models.Appt
     .findById(req.body._id, (err, appt) => {
-      console.log('appointment found');
-
       appt.set({isCancelled: true, message: req.body.message});
       appt
         .save((err, updatedAppt) => {
-          console.log('appointment has been cancelled');
           models.Appt
             .find({patientID: updatedAppt.patientID})
             .then(response => {
@@ -96,5 +108,29 @@ app.put('/appointment', (req, res) => {
     .catch(err => {
       console.log('error finding appointment to cancel: ', err);
       res.status(400).send();
+    });
+});
+
+app.put('/appointment/doctor/confirm', (req, res) => {
+  models.Appt
+    .findById(req.body._id, (err, appt) => {
+      appt.set({isConfirmedByDoctor: !appt.isConfirmedByDoctor});
+      appt
+        .save((err, updatedAppt) => {
+          models.Appt
+            .find({patientID: updatedAppt.patientID})
+            .then(response => {
+              res.status(200).send(response);
+            })
+            .catch(err => {
+              console.log('error retrieving complete list of appointments', err);
+            });
+        })
+        .catch(err => {
+          console.log('error updating appointment confirmation by doctor: ', err);
+        });
+    })
+    .catch(err => {
+      console.log('error finding appointment to update confirmation: ', err);
     });
 });

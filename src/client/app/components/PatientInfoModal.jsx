@@ -70,6 +70,7 @@ const PatientInfoModal = (props) => (
                 handleMessageBoxClose={props.handleMessageBoxClose}
                 handleMessageBoxOpen={props.handleMessageBoxOpen}
                 handleCancelMessage={props.handleCancelMessage}
+                handleConfirmAppt={props.handleConfirmAppt}
               />
             </Card.Group>
           </Grid.Column>

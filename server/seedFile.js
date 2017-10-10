@@ -1,5 +1,7 @@
 const moment = require('moment');
 const models = require('../database/mongoose');
+const redis = require('../database/redis');
+const hasher = require('password-hash-and-salt');
 
 const seed = {
   patients: [
@@ -102,7 +104,40 @@ const seed = {
       name: 'Michael Brown',
     },
   ],
+  login: [
+    {
+      username: 'patient1',
+      password: 'patient1',
+      type: 'patient',
+    },
+    {
+      username: 'patient2',
+      password: 'patient2',
+      type: 'patient',
+    },
+    {
+      username: 'patient3',
+      password: 'patient3',
+      type: 'patient',
+    },
+    {
+      username: 'patient4',
+      password: 'patient4',
+      type: 'patient',
+    },
+    {
+      username: 'patient5',
+      password: 'patient5',
+      type: 'patient',
+    },
+    {
+      username: 'doctor1',
+      password: 'doctor1',
+      type: 'doctor',
+    },
+  ]
 };
+
 
 module.exports = function() {
   seed.patients.forEach(patient => {
@@ -134,4 +169,19 @@ module.exports = function() {
         console.log('err seeding doctors: ', err);
       });
   });
+
+  seed.login.forEach(login => {
+    hasher(login.password).hash((err, hash) => {
+      if (err) {
+        console.log('error hashing password: ', err);
+      }
+      redis.hmset(login.username, {'username': login.username, 'password': hash, 'userType': login.type}, (err, reply) => {
+        if (err) {
+          console.log('error saving login to redis: ', err);
+        }
+        console.log('reply: ', reply);
+      });
+    })
+  });
+
 };

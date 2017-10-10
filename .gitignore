@@ -3,3 +3,5 @@ node_modules/
 bundle.js
 
 database/mongoose/data/db
+
+dump.rdb
