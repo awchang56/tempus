@@ -32,7 +32,9 @@ const apptSchema = new mongoose.Schema({
   date: Date,
   purpose: String,
   doctorID: String,
-  isComplete: Boolean,
+  isConfirmedByDoctor: Boolean,
+  isConfirmedByPatient: Boolean,
+  isCancelled: Boolean,
 });
 
 const Appt = db.model('Appt', apptSchema);

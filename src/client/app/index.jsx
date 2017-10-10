@@ -59,6 +59,7 @@ class App extends React.Component {
   handleCloseModal() {
     this.setState({
       modalOpen: false,
+      addAppointmentFormOpen: false,
     });
   }
 
@@ -97,7 +98,8 @@ class App extends React.Component {
       ),
       purpose: this.state.apptPurpose,
       doctorID: 'doctor1',
-      isComplete: false,
+      isConfirmedByPatient: false,
+      isConfirmedByDoctor: true,
     };
     axios
       .post('/appointment', appt)
@@ -107,6 +109,8 @@ class App extends React.Component {
           selectedDate: '',
           selectedTime: null,
           apptPurpose: '',
+          addAppointmentFormOpen: false,
+
         });
       })
       .catch(err => {
