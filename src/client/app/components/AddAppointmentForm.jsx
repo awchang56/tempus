@@ -39,7 +39,6 @@ const AddAppointmentForm = (props) => (
           onChange={props.handleApptPurpose}
           value={props.apptPurpose}
         />
-
       </Form>
     </Card.Content>
     <Button

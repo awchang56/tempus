@@ -168,18 +168,18 @@ class App extends React.Component {
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
-          <Grid.Column width={14}>
-            <Form.Input fluid onChange={this.handleSearchPatient.bind(this)} />
-          </Grid.Column>
-          <Grid.Column width={2}>
-            <Button onClick={() => console.log('button pressed')}>
-              <Icon name="search" />
-            </Button>
+          <Grid.Column width={16} textAlign="center">
+            <Header as="h3">Patient Information</Header>
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
-          <Grid.Column width={16} textAlign="center">
-            <Header as="h3">Patient Information</Header>
+          <Grid.Column width={16}>
+            <Form.Input
+              style={{margin: '10 30 10 30'}}
+              fluid
+              placeholder="Enter a patient name here..."
+              onChange={this.handleSearchPatient.bind(this)}
+            />
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
