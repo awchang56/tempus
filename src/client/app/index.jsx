@@ -18,6 +18,7 @@ class App extends React.Component {
       password: '',
       userType: '',
       validLogin: '',
+      patient: {},
     };
   }
 
@@ -48,8 +49,9 @@ class App extends React.Component {
           });
         } else {
           this.setState({
-            userType: response.data,
+            userType: response.data.userType,
             validLogin: true,
+            patient: response.data.patient,
           });
         }
       })
@@ -68,7 +70,7 @@ class App extends React.Component {
         </Header>
       );
     } else {
-      return null
+      return null;
     }
   }
 
@@ -101,7 +103,7 @@ class App extends React.Component {
           this.state.userType === 'doctor'
             ? <Doctor />
             : this.state.userType === 'patient'
-              ? <Patient />
+              ? <Patient patient={this.state.patient} />
               : <Login
                 handleLogin={this.handleLogin.bind(this)}
                 handlePassword={this.handlePassword.bind(this)}

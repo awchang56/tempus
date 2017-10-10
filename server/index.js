@@ -28,7 +28,22 @@ app.post('/login', (req, res) => {
         } else if (!verified) {
           res.status(200).send('invalid');
         } else {
-          res.status(200).send(obj.userType);
+          if (obj.userType === 'patient') {
+            models.Patient
+              .find({patientID: req.body.username})
+              .then(response => {
+                response = {
+                  patient: response[0],
+                  userType: obj.userType,
+                };
+                res.status(200).send(response);
+              })
+              .catch(err => {
+                console.log('error finding patient by patientID in DB: ', err);
+              });
+          } else {
+            res.status(200).send(obj.userType);
+          }
         }
       });
     }
@@ -51,6 +66,17 @@ app.get('/patient', (req, res) => {
       res.status(400).send();
     });
 });
+
+// app.get('/patient/:patientID', (req, res) => {
+//   models.Patient
+//     .find({patientID: req.params.patientID})
+//     .then(response => {
+//       res.status(200).send(response);
+//     })
+//     .catch(err => {
+//       console.log('error finding current patient in DB: ', err);
+//     });
+// });
 
 app.get('/appointment/:patientID', (req, res) => {
   models.Appt
