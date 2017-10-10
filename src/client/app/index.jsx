@@ -48,11 +48,18 @@ class App extends React.Component {
             validLogin: false,
           });
         } else {
-          this.setState({
-            userType: response.data.userType,
-            validLogin: true,
-            patient: response.data.patient,
-          });
+          if (response.data.userType === 'patient') {
+            this.setState({
+              userType: response.data.userType,
+              validLogin: true,
+              patient: response.data.patient,
+            });
+          } else {
+            this.setState({
+              userType: response.data,
+              validLogin: true,
+            });
+          }
         }
       })
       .catch(err => {
