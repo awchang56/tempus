@@ -8,16 +8,15 @@ const multer = require('multer');
 const app = express();
 
 var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination: function(req, file, cb) {
     cb(null, './src/client/public/files');
   },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname)
-  }
-})
+  filename: function(req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  },
+});
 
-var upload = multer({ storage: storage })
-
+var upload = multer({storage: storage});
 
 app.listen(3000, () => {
   console.log('listening on port 3000');
@@ -29,7 +28,6 @@ app.use(bodyParser.urlencoded({limit: '30mb', extended: true}));
 app.use(express.static(__dirname + '/../src/client/public'));
 
 app.post('/file', upload.single('file'), (req, res) => {
-  console.log('req.file: ', req.file);
   new models.File({patientID: req.body.patientID, fileName: req.file.filename})
     .save()
     .then((err, doc) => {
@@ -39,13 +37,11 @@ app.post('/file', upload.single('file'), (req, res) => {
           res.status(200).send(response);
         })
         .catch(err => {
-          console.log('error retrieving uploads from DB: ', err);
-          res.stats(400).send();
+          res.status(400).send(`error retrieving uploads from DB: ${err}`);
         });
     })
     .catch(err => {
-      console.log('error saving file to DB: ', err);
-      res.stats(400).send();
+      res.status(400).send(`error saving file to DB: ${err}`);
     });
 });
 
@@ -56,32 +52,30 @@ app.get('/file/:patientID', (req, res) => {
       res.status(200).send(response);
     })
     .catch(err => {
-      console.log('error retrieving uploads from DB: ', err);
-      res.stats(400).send();
+      res.status(400).send(`error retrieving uploads from DB: ${err}`);
     });
 });
 
 app.delete('/file/:_id', (req, res) => {
-    models.File
-      .findById(req.params._id, (err, file) => {
-        if (!file) {
-          res.status(400).send('no file found');
-        } else {
-          file.remove();
-          models.File
-            .find({patientID: file.patientID})
-            .then(response => {
-              res.status(200).send(response);
-            })
-            .catch(err => {
-              console.log('error retrieivng files from DB: ', err);
-            });
-        }
-      })
-      .catch(err => {
-        console.log('error removing file from DB: ', err);
-      });
-
+  models.File
+    .findById(req.params._id, (err, file) => {
+      if (!file) {
+        res.status(400).send('no file found');
+      } else {
+        file.remove();
+        models.File
+          .find({patientID: file.patientID})
+          .then(response => {
+            res.status(200).send(response);
+          })
+          .catch(err => {
+            res.status(400).send(`error retrieving uploads from DB: ${err}`);
+          });
+      }
+    })
+    .catch(err => {
+      res.status(400).send(`error deleting upload from DB: ${err}`);
+    });
 });
 
 app.post('/login', (req, res) => {
@@ -91,8 +85,7 @@ app.post('/login', (req, res) => {
     } else {
       hasher(req.body.password).verifyAgainst(obj.password, (err, verified) => {
         if (err) {
-          console.log('error verifying hash: ', err);
-          res.status(400).send();
+          res.status(400).send(`error verifying hash: ${err}`);
         } else if (!verified) {
           res.status(200).send('invalid');
         } else {
@@ -107,7 +100,9 @@ app.post('/login', (req, res) => {
                 res.status(200).send(response);
               })
               .catch(err => {
-                console.log('error finding patient by patientID in DB: ', err);
+                res
+                  .status(400)
+                  .send(`error finding patient by patientID in DB: ${err}`);
               });
           } else {
             res.status(200).send(obj.userType);
@@ -123,7 +118,6 @@ app.get('/seed', (req, res) => {
   res.end();
 });
 
-
 app.get('/patient', (req, res) => {
   models.Patient
     .find()
@@ -131,8 +125,7 @@ app.get('/patient', (req, res) => {
       res.status(200).send(response);
     })
     .catch(err => {
-      console.log('error retrieving all patients from database', err);
-      res.status(400).send();
+      res.status(400).send(`error retrieving all patients from DB: ${err}`);
     });
 });
 
@@ -143,33 +136,30 @@ app.get('/appointment/:patientID', (req, res) => {
       res.status(200).send(response);
     })
     .catch(err => {
-      console.log('error retrieving all appointments from database', err);
-      res.status(400).send();
+      res.status(400).send(`error retrieving all appointments from DB: ${err}`);
     });
 });
 
 app.post('/appointment', (req, res) => {
   new models.Appt(req.body)
     .save((err, doc) => {
-      console.log('appointment saved');
       models.Appt
         .find({patientID: doc.patientID})
         .then(response => {
           res.status(201).send(response);
         })
         .catch(err => {
-          console.log('error retrieving complete list of appointments: ', err);
-          res.status(400).send();
+          res
+            .status(400)
+            .send(`error retrieving all appointments from DB: ${err}`);
         });
     })
     .catch(err => {
-      console.log('error adding appt to database: ', err);
-      res.status(400).send();
+      res.status(400).send(`error adding appt to DB: ${err}`);
     });
 });
 
 app.put('/appointment/cancel', (req, res) => {
-  console.log('req.body: ', req.body);
   models.Appt
     .findById(req.body._id, (err, appt) => {
       appt.set({isCancelled: !appt.isCancelled, message: req.body.message});
@@ -181,18 +171,17 @@ app.put('/appointment/cancel', (req, res) => {
               res.status(200).send(response);
             })
             .catch(err => {
-              console.log('error retrieving complete list of appointments', err);
-              res.status(400).send();
+              res
+                .status(400)
+                .send(`error retrieving all appointments from DB: ${err}`);
             });
         })
         .catch(err => {
-          console.log('error updating cancelled appointment: ', err);
-          res.status(400).send();
+          res.status(400).send(`error updating cancelled appointment: ${err}`);
         });
     })
     .catch(err => {
-      console.log('error finding appointment to cancel: ', err);
-      res.status(400).send();
+      res.status(400).send(`error finding appointment to cancel ${err}`);
     });
 });
 
@@ -212,14 +201,20 @@ app.put('/appointment/confirm', (req, res) => {
               res.status(200).send(response);
             })
             .catch(err => {
-              console.log('error retrieving complete list of appointments', err);
+              res
+                .status(400)
+                .send(`error retrieving all appointments from DB: ${err}`);
             });
         })
         .catch(err => {
-          console.log('error updating appointment confirmation by doctor: ', err);
+          res
+            .status(400)
+            .send(`error updating appointment confirmation by doctor:  ${err}`);
         });
     })
     .catch(err => {
-      console.log('error finding appointment to update confirmation: ', err);
+      res
+        .status(400)
+        .send(`error finding appointment to update confirmation: ${err}`);
     });
 });

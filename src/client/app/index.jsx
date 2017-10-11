@@ -4,7 +4,6 @@ import {Grid, Header, Form, Input, Button} from 'semantic-ui-react';
 import axios from 'axios';
 import hasher from 'password-hash-and-salt';
 
-
 import Login from './components/Login.jsx';
 
 import Doctor from './components/Doctor.jsx';
@@ -13,6 +12,9 @@ import Patient from './components/Patient.jsx';
 class App extends React.Component {
   constructor(props) {
     super(props);
+    this.handleLogin = this.handleLogin.bind(this);
+    this.handlePassword = this.handlePassword.bind(this);
+    this.handleUsername = this.handleUsername.bind(this);
     this.state = {
       username: '',
       password: '',
@@ -35,7 +37,7 @@ class App extends React.Component {
   }
 
   handleLogin() {
-    let credentials = {
+    const credentials = {
       username: this.state.username,
       password: this.state.password,
     };
@@ -63,7 +65,9 @@ class App extends React.Component {
         }
       })
       .catch(err => {
-        console.log('error authenticating credentials');
+        if (err) {
+          throw err;
+        }
       });
   }
 
@@ -93,32 +97,28 @@ class App extends React.Component {
         <Grid.Row>
           <Grid.Column width={16} textAlign="center">
             <Header as="h3">
-              {
-                this.state.validLogin ? 'Patient Information' : 'Login'
-              }
+              {this.state.validLogin ? 'Patient Information' : 'Login'}
             </Header>
-            {
-              (JSON.stringify(this.state.validLogin) === 'false') ? (
-                <Header as="h4" style={{color: 'red'}}>
-                  Invalid username/password combo
-                </Header>
-                ) : null
-            }
+            {JSON.stringify(this.state.validLogin) === 'false' ? (
+              <Header as="h4" style={{color: 'red'}}>
+                Invalid username/password combo
+              </Header>
+            ) : null}
           </Grid.Column>
         </Grid.Row>
-        {
-          this.state.userType === 'doctor'
-            ? <Doctor />
-            : this.state.userType === 'patient'
-              ? <Patient patient={this.state.patient} />
-              : <Login
-                handleLogin={this.handleLogin.bind(this)}
-                handlePassword={this.handlePassword.bind(this)}
-                handleUsername={this.handleUsername.bind(this)}
-              />
-        }
+        {this.state.userType === 'doctor' ? (
+          <Doctor />
+        ) : this.state.userType === 'patient' ? (
+          <Patient patient={this.state.patient} />
+        ) : (
+          <Login
+            handleLogin={this.handleLogin}
+            handlePassword={this.handlePassword}
+            handleUsername={this.handleUsername}
+          />
+        )}
       </Grid>
-    )
+    );
   }
 }
 

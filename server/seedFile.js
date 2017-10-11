@@ -135,9 +135,8 @@ const seed = {
       password: 'doctor1',
       type: 'doctor',
     },
-  ]
+  ],
 };
-
 
 module.exports = function() {
   seed.patients.forEach(patient => {
@@ -175,13 +174,16 @@ module.exports = function() {
       if (err) {
         console.log('error hashing password: ', err);
       }
-      redis.hmset(login.username, {'username': login.username, 'password': hash, 'userType': login.type}, (err, reply) => {
-        if (err) {
-          console.log('error saving login to redis: ', err);
+      redis.hmset(
+        login.username,
+        {username: login.username, password: hash, userType: login.type},
+        (err, reply) => {
+          if (err) {
+            console.log('error saving login to redis: ', err);
+          }
+          console.log('reply: ', reply);
         }
-        console.log('reply: ', reply);
-      });
-    })
+      );
+    });
   });
-
 };

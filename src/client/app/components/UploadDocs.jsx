@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card, Grid, Image, Button, Dimmer, Icon} from 'semantic-ui-react';
+import {Card, Button} from 'semantic-ui-react';
 import axios from 'axios';
 import Dropzone from 'react-dropzone';
 import UploadedFileCard from './UploadedFileCard.jsx';
@@ -22,7 +22,9 @@ class UploadDocs extends React.Component {
         });
       })
       .catch(err => {
-        console.log('error retrieving uploads from server');
+        if (err) {
+          throw err;
+        }
       });
   }
 
@@ -42,13 +44,14 @@ class UploadDocs extends React.Component {
     axios
       .post('/file', data)
       .then(response => {
-        console.log('response: ', response);
         this.setState({
           files: response.data,
         });
       })
       .catch(err => {
-        console.log('error: ', err);
+        if (err) {
+          throw err;
+        }
       });
   }
 
@@ -61,30 +64,32 @@ class UploadDocs extends React.Component {
         });
       })
       .catch(err => {
-        console.log('error deleting files: ', err);
+        if (err) {
+          throw err;
+        }
       });
   }
 
   render() {
     let dropzoneRef;
-    let uploadedFiles = this.state.files.map((file, i) => {
-                          return (
-                            <UploadedFileCard
-                              key={i}
-                              file={file}
-                              handleDeleteFiles={this.handleDeleteFiles}
-                            />
-                          )
-                        });
+    const uploadedFiles = this.state.files.map((file, i) => {
+      return (
+        <UploadedFileCard
+          key={i}
+          file={file}
+          handleDeleteFiles={this.handleDeleteFiles}
+        />
+      );
+    });
 
     return (
       <Card fluid>
         <Card.Content>
-          <Card.Header style={{paddingBottom: 10}}>Uploaded Documents</Card.Header>
+          <Card.Header style={{paddingBottom: 10}}>
+            Uploaded Documents
+          </Card.Header>
           <Card.Description>
-            <Card.Group itemsPerRow={4}>
-              {uploadedFiles}
-            </Card.Group>
+            <Card.Group itemsPerRow={4}>{uploadedFiles}</Card.Group>
           </Card.Description>
           <Dropzone
             style={{display: 'none'}}
@@ -94,15 +99,11 @@ class UploadDocs extends React.Component {
             onDrop={this.onImageDrop.bind(this)}
           />
         </Card.Content>
-        <Button
-          fluid
-          color="teal"
-          onClick={() => dropzoneRef.open()}
-        >
+        <Button fluid color="teal" onClick={() => dropzoneRef.open()}>
           Upload A File
         </Button>
       </Card>
-    )
+    );
   }
 }
 

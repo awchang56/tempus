@@ -1,19 +1,12 @@
 import React from 'react';
-import {Modal, Grid, Header, Card, Icon, Form, Button} from 'semantic-ui-react';
-import moment from 'moment';
+import {Modal, Grid, Header} from 'semantic-ui-react';
 
-import AppointmentsList from './AppointmentsList.jsx';
-import AddAppointment from './AddAppointment.jsx';
-import AddAppointmentForm from './AddAppointmentForm.jsx';
+import Appointments from './Appointments.jsx';
 import UploadDocs from './UploadDocs.jsx';
 import Legend from './Legend.jsx';
 
-const PatientInfoModal = (props) => (
-  <Modal
-    open={props.modalOpen}
-    onClose={props.handleCloseModal}
-    basic
-  >
+const PatientInfoModal = props => (
+  <Modal open={props.modalOpen} onClose={props.handleCloseModal} basic>
     <Modal.Description>
       <Grid padded centered verticalAlign="middle" columns={3}>
         <Grid.Row>
@@ -48,45 +41,21 @@ const PatientInfoModal = (props) => (
             </p>
           </Grid.Column>
         </Grid.Row>
-        <UploadDocs
-          patient={props.patient}
-        />
+        <UploadDocs patient={props.patient} />
         <Legend />
-        <Grid.Row>
-          <Grid.Column width={16} textAlign="left">
-            <Card.Group>
-              {
-                props.addAppointmentFormOpen
-                  ? <AddAppointmentForm
-                    patient={props.patient}
-                    selectedDate={props.selectedDate}
-                    selectedTime={props.selectedTime}
-                    apptPurpose={props.apptPurpose}
-                    handleTimeChange={props.handleTimeChange}
-                    handleDateChange={props.handleDateChange}
-                    handleApptPurpose={props.handleApptPurpose}
-                    handleAddAppointment={props.handleAddAppointment}
-                  />
-                  : <AddAppointment renderAddAppointmentForm={props.renderAddAppointmentForm} />
-              }
-              <AppointmentsList
-                patient={props.patient}
-                appointments={props.appointments || []}
-                handleDeleteAppt={props.handleDeleteAppt}
-                messageBoxOpen={props.messageBoxOpen}
-                handleMessageBoxClose={props.handleMessageBoxClose}
-                handleMessageBoxOpen={props.handleMessageBoxOpen}
-                handleCancelMessage={props.handleCancelMessage}
-                handleConfirmAppt={props.handleConfirmAppt}
-                handleUpload={props.handleUpload}
-                handleAppt={props.handleAppt}
-              />
-            </Card.Group>
-          </Grid.Column>
-        </Grid.Row>
+        <Appointments
+          patient={props.patient}
+          handleUpdateAppts={props.handleUpdateAppts}
+          renderAddAppointmentForm={props.renderAddAppointmentForm}
+          appointments={props.appointments}
+          handleCancelAppt={props.handleCancelAppt}
+          handleCancelModalOpen={props.handleCancelModalOpen}
+          handleConfirmAppt={props.handleConfirmAppt}
+          addAppointmentFormOpen={props.addAppointmentFormOpen}
+        />
       </Grid>
     </Modal.Description>
   </Modal>
-)
+);
 
 export default PatientInfoModal;

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card, Dimmer, Button, Icon, Image} from 'semantic-ui-react';
+import {Card, Dimmer, Button, Image} from 'semantic-ui-react';
 
 class UploadedFileCard extends React.Component {
   constructor(props) {
@@ -18,7 +18,6 @@ class UploadedFileCard extends React.Component {
 
   render() {
     const {active} = this.state;
-    let dropzoneRef;
     const content = (
       <div>
         <Button
@@ -35,11 +34,11 @@ class UploadedFileCard extends React.Component {
           dimmer={{active, content}}
           onMouseEnter={this.handleDimmer}
           onMouseLeave={this.handleDimmer}
-          size='medium'
+          size="medium"
           src={`/files/${this.props.file.fileName}`}
         />
       </Card>
-    )
+    );
   }
 }
 

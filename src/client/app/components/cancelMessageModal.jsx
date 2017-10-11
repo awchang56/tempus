@@ -1,11 +1,8 @@
 import React from 'react';
 import {Modal, Card, Input, Button} from 'semantic-ui-react';
 
-const CancelMessageModal = (props) => (
-  <Modal
-    open={props.messageBoxOpen}
-    onClose={props.handleMessageBoxClose}
-  >
+const CancelMessageModal = props => (
+  <Modal open={props.cancelModalOpen} onClose={props.handleCancelModalClose}>
     <Modal.Description>
       <Card fluid>
         <Card.Content>
@@ -13,15 +10,10 @@ const CancelMessageModal = (props) => (
           <Card.Description>
             <Input
               fluid
-              onChange={props.handleCancelMessage}
+              onChange={props.handleCancelModalMessage}
               placeholder="Write a message to the patient here..."
-            >
-            </Input>
-            <Button
-              color="red"
-              fluid
-              onClick={props.handleDeleteAppt}
-            >
+            />
+            <Button color="red" fluid onClick={props.handleCancelAppt}>
               Cancel Appt
             </Button>
           </Card.Description>

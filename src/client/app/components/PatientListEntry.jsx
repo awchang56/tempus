@@ -1,7 +1,7 @@
 import React from 'react';
 import {Card, Grid} from 'semantic-ui-react';
 
-const PatientListEntry = (props) => (
+const PatientListEntry = props => (
   <Card
     fluid
     width={15}

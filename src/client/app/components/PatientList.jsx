@@ -1,7 +1,7 @@
 import React from 'react';
 import PatientListEntry from './PatientListEntry.jsx';
 
-const PatientList = (props) => (
+const PatientList = props =>
   props.patients.map((patient, i) => {
     return (
       <PatientListEntry
@@ -9,8 +9,7 @@ const PatientList = (props) => (
         patient={patient}
         renderPatientInfo={props.renderPatientInfo}
       />
-    )
-  })
-);
+    );
+  });
 
 export default PatientList;
