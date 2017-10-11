@@ -5,3 +5,4 @@ bundle.js
 database/mongoose/data/db
 
 dump.rdb
+src/client/public/files/

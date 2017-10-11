@@ -1,6 +1,6 @@
 {
   "extends": [
-    "planet"
+    "planet/react"
   ],
   "parserOptions": {
     "ecmaVersion": 6,

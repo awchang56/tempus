@@ -4,17 +4,85 @@ const models = require('../database/mongoose');
 const redis = require('../database/redis');
 const seedDatabase = require('./seedFile');
 const hasher = require('password-hash-and-salt');
-
+const multer = require('multer');
 const app = express();
+
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './src/client/public/files');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname)
+  }
+})
+
+var upload = multer({ storage: storage })
+
 
 app.listen(3000, () => {
   console.log('listening on port 3000');
 });
 
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '30mb'}));
+app.use(bodyParser.urlencoded({limit: '30mb', extended: true}));
 
-app.use(express.static(__dirname + '/../src/client/'));
+app.use(express.static(__dirname + '/../src/client/public'));
+
+app.post('/file', upload.single('file'), (req, res) => {
+  console.log('req.file: ', req.file);
+  new models.File({patientID: req.body.patientID, fileName: req.file.filename})
+    .save()
+    .then((err, doc) => {
+      models.File
+        .find({patientID: req.body.patientID})
+        .then(response => {
+          res.status(200).send(response);
+        })
+        .catch(err => {
+          console.log('error retrieving uploads from DB: ', err);
+          res.stats(400).send();
+        });
+    })
+    .catch(err => {
+      console.log('error saving file to DB: ', err);
+      res.stats(400).send();
+    });
+});
+
+app.get('/file/:patientID', (req, res) => {
+  models.File
+    .find({patientID: req.params.patientID})
+    .then(response => {
+      res.status(200).send(response);
+    })
+    .catch(err => {
+      console.log('error retrieving uploads from DB: ', err);
+      res.stats(400).send();
+    });
+});
+
+app.delete('/file/:_id', (req, res) => {
+    models.File
+      .findById(req.params._id, (err, file) => {
+        if (!file) {
+          res.status(400).send('no file found');
+        } else {
+          file.remove();
+          models.File
+            .find({patientID: file.patientID})
+            .then(response => {
+              res.status(200).send(response);
+            })
+            .catch(err => {
+              console.log('error retrieivng files from DB: ', err);
+            });
+        }
+      })
+      .catch(err => {
+        console.log('error removing file from DB: ', err);
+      });
+
+});
 
 app.post('/login', (req, res) => {
   redis.hgetall(req.body.username, (err, obj) => {
@@ -55,6 +123,7 @@ app.get('/seed', (req, res) => {
   res.end();
 });
 
+
 app.get('/patient', (req, res) => {
   models.Patient
     .find()
@@ -66,17 +135,6 @@ app.get('/patient', (req, res) => {
       res.status(400).send();
     });
 });
-
-// app.get('/patient/:patientID', (req, res) => {
-//   models.Patient
-//     .find({patientID: req.params.patientID})
-//     .then(response => {
-//       res.status(200).send(response);
-//     })
-//     .catch(err => {
-//       console.log('error finding current patient in DB: ', err);
-//     });
-// });
 
 app.get('/appointment/:patientID', (req, res) => {
   models.Appt

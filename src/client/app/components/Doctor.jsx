@@ -177,6 +177,21 @@ class Doctor extends React.Component {
       });
   }
 
+  handleUpload(e) {
+    axios
+      .post('/file', e.target.value)
+      .then(response => {
+        console.log('response: ', response);
+      })
+      .catch(err => {
+        console.log('error uploading file: ', err);
+      })
+  }
+
+  handleAppt(appt) {
+    console.log('appt: ', appt);
+  }
+
   render() {
     return (
       <div>
@@ -218,6 +233,8 @@ class Doctor extends React.Component {
             handleMessageBoxOpen={this.handleMessageBoxOpen.bind(this)}
             handleConfirmAppt={this.handleConfirmAppt.bind(this)}
             handleDeleteAppt={this.handleDeleteAppt.bind(this)}
+            handleUpload={this.handleUpload.bind(this)}
+            handleAppt={this.handleAppt.bind(this)}
           />
         </Grid.Row>
         <Grid.Row>

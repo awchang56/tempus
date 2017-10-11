@@ -5,6 +5,8 @@ import moment from 'moment';
 import AppointmentsList from './AppointmentsList.jsx';
 import AddAppointment from './AddAppointment.jsx';
 import AddAppointmentForm from './AddAppointmentForm.jsx';
+import UploadDocs from './UploadDocs.jsx';
+import Legend from './Legend.jsx';
 
 const PatientInfoModal = (props) => (
   <Modal
@@ -46,6 +48,10 @@ const PatientInfoModal = (props) => (
             </p>
           </Grid.Column>
         </Grid.Row>
+        <UploadDocs
+          patient={props.patient}
+        />
+        <Legend />
         <Grid.Row>
           <Grid.Column width={16} textAlign="left">
             <Card.Group>
@@ -64,6 +70,7 @@ const PatientInfoModal = (props) => (
                   : <AddAppointment renderAddAppointmentForm={props.renderAddAppointmentForm} />
               }
               <AppointmentsList
+                patient={props.patient}
                 appointments={props.appointments || []}
                 handleDeleteAppt={props.handleDeleteAppt}
                 messageBoxOpen={props.messageBoxOpen}
@@ -71,6 +78,8 @@ const PatientInfoModal = (props) => (
                 handleMessageBoxOpen={props.handleMessageBoxOpen}
                 handleCancelMessage={props.handleCancelMessage}
                 handleConfirmAppt={props.handleConfirmAppt}
+                handleUpload={props.handleUpload}
+                handleAppt={props.handleAppt}
               />
             </Card.Group>
           </Grid.Column>

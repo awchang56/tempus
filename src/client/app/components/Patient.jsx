@@ -7,6 +7,7 @@ import AddAppointmentForm from './AddAppointmentForm.jsx';
 import AddAppointment from './AddAppointment.jsx';
 import AppointmentsList from './AppointmentsList.jsx';
 import Legend from './Legend.jsx';
+import UploadDocs from './UploadDocs.jsx';
 
 class Patient extends React.Component {
   constructor(props) {
@@ -15,7 +16,6 @@ class Patient extends React.Component {
       currentPatient: {},
       appointments: [],
       addAppointmentFormOpen: false,
-      messageBoxOpen: false,
     };
   }
 
@@ -24,7 +24,7 @@ class Patient extends React.Component {
       .get('/appointment/' + this.props.patient.patientID)
       .then(response => {
         this.setState({
-          appointments: response.data
+          appointments: response.data,
         });
       })
       .catch(err => {
@@ -84,25 +84,6 @@ class Patient extends React.Component {
       .catch(err => {
         console.log('error saving new appointment: ', err);
       });
-  }
-
-  handleCancelMessage(e) {
-    this.setState({
-      cancelMessage: e.target.value,
-    });
-  }
-
-  handleMessageBoxOpen(appt) {
-    this.setState({
-      messageBoxOpen: true,
-      cancelledAppt: appt,
-    });
-  }
-
-  handleMessageBoxClose() {
-    this.setState({
-      messageBoxOpen: false,
-    });
   }
 
   handleConfirmAppt(appt) {
@@ -175,6 +156,9 @@ class Patient extends React.Component {
               </Grid>
             </Card.Content>
           </Card>
+          <UploadDocs
+            patient={this.props.patient}
+          />
           <Legend />
           <Grid>
             <Grid.Row>
@@ -195,12 +179,9 @@ class Patient extends React.Component {
                       : <AddAppointment renderAddAppointmentForm={this.renderAddAppointmentForm.bind(this)} />
                   }
                   <AppointmentsList
+                    patient={this.props.patient}
                     appointments={this.state.appointments}
                     handleDeleteAppt={this.handleDeleteAppt.bind(this)}
-                    // messageBoxOpen={this.state.messageBoxOpen}
-                    // handleMessageBoxClose={this.handleMessageBoxClose.bind(this)}
-                    // handleMessageBoxOpen={this.handleMessageBoxOpen.bind(this)}
-                    // handleCancelMessage={this.handleCancelMessage.bind(this)}
                     handleConfirmAppt={this.handleConfirmAppt.bind(this)}
                     userType={'patient'}
                   />

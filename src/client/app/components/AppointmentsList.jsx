@@ -1,6 +1,8 @@
 import React from 'react';
-import {Card, Grid, Icon, Button, Form, Input, Modal, TextArea} from 'semantic-ui-react';
+import {Card, Grid, Icon, Button, Form, Input, Modal, TextArea, Dimmer, Image} from 'semantic-ui-react';
 import moment from 'moment';
+import Dropzone from 'react-dropzone';
+import axios from 'axios';
 
 const renderApptColor = appt => {
   if (
@@ -82,8 +84,10 @@ const AppointmentsList = (props) => (
                         }
                       }}
                     />
-                    <Button icon="file" />
-                    <Button icon={validateApptConfirmation(appt)} onClick={() => props.handleConfirmAppt(appt)} />
+                    <Button
+                      icon={validateApptConfirmation(appt)}
+                      onClick={() => props.handleConfirmAppt(appt)}
+                    />
                   </span>
                 </Grid.Column>
               </Grid.Row>
@@ -92,6 +96,6 @@ const AppointmentsList = (props) => (
         </Card>
       )
     })
-);
+)
 
 export default AppointmentsList;

@@ -21,8 +21,8 @@ const patientSchema = new mongoose.Schema({
 const Patient = db.model('Patient', patientSchema);
 
 const fileSchema = new mongoose.Schema({
-  patientID: Number,
-  file: {data: Buffer, contentType: String},
+  patientID: String,
+  fileName: String,
 });
 
 const File = db.model('File', fileSchema);
