@@ -77,3 +77,11 @@ I used Semantic UI React for its easy integration into React. It allows for easy
 * As a doctor, when you enter a query into the search bar, and the search returns no results, the search box collapses until you backspace to a valid query
 * As a doctor, after cancelling an appointment, if there are multiple appointments that require the user to scroll in the patient info modal, the scroll function gets disabled.
 * For file management, I was only able to display the file if it was a picture. I stored the documents locally in src/public/files. When you delete a file, occasionally the file will remain on the screen, even after it's record has been deleted from the database. If you try to delete multiple times, it will not crash the app, I have coded to ensure smooth functionality.
+
+### Future Features
+
+* I would implement some client side routing with React Router for more efficient page navigation.
+* I would also implement Redux for better state management across usertypes
+* Patients should be able to send a message back to their Doctors
+* Doctors and Patients should be able to add a new user or edit their info
+* Application should be migrated to mobile or tablet, as healthcare professionals are increasingly using more technology while interacting with patients
