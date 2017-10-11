@@ -19,7 +19,7 @@ On the command prompt run the following commands
 ```sh
 $ git clone https://github.com/awchang56/tempus.git && cd tempus
 
-$ mkdir database/data && mkdir database/data/db && mkdir src/client/public/files
+$ mkdir database/mongoose/data && mkdir database/mongoose/data/db && mkdir src/client/public/files
 
 $ yarn install
 
