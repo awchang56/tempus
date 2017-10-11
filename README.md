@@ -76,3 +76,4 @@ I used Semantic UI React for its easy integration into React. It allows for easy
 
 * As a doctor, when you enter a query into the search bar, and the search returns no results, the search box collapses until you backspace to a valid query
 * As a doctor, after cancelling an appointment, if there are multiple appointments that require the user to scroll in the patient info modal, the scroll function gets disabled.
+* For file management, I was only able to display the file if it was a picture. I stored the documents locally in src/public/files. When you delete a file, occasionally the file will remain on the screen, even after it's record has been deleted from the database. If you try to delete multiple times, it will not crash the app, I have coded to ensure smooth functionality.
