@@ -115,7 +115,7 @@ app.post('/login', (req, res) => {
 
 app.get('/seed', (req, res) => {
   seedDatabase();
-  res.end();
+  res.send('databases seeded');
 });
 
 app.get('/patient', (req, res) => {
